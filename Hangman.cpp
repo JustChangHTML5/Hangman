@@ -254,13 +254,15 @@ void game() {
     //Tells player data and asks if they want to play again.
     if (hasWon) {
         drawHangman(wrongGuesses, maxWrongGuesses);
+        cout << "Known Letters: " << knownLetters << endl;
         cout << "Final Word: " << curWord << "\n" << endl;
-        cout << "Congratulations!\nYou completed the game with " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << "correct guesses, and " << guesses << " total guesses.\n" << endl;
+        cout << "Congratulations! You have completed the game!\n" << "You won with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     } else {
         drawHangman(wrongGuesses, maxWrongGuesses);
+        cout << "Known Letters: " << knownLetters << endl;
         cout << "Final Word: " << curWord << "\n" << endl;
-        cout << "Congratulations!\nYou completed the game with " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << "correct guesses, and " << guesses << " total guesses.\n" << endl;
+        cout << "You lost. Better luck next time!\n" << "You lost with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     }
     
