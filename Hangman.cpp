@@ -5,6 +5,18 @@ Date: 7/6/23
 M3 Capstone Project Design-Draft a Program: Hangman Game
 
 =========================*/
+
+/*
+* This represents which line in the code contains an example to a requirement.
+3. Inputs and Output (I/O): line 226
+4. Variables: line 195
+5. Arrays: line 198
+6. File I/O: line 72
+7. Iteration (loops): line 119
+8. Interaction: line 232
+9. Control: line: 146
+*/
+
 #include <iostream> //Adds console input functions
 #include <fstream> //Adds functions to read from files
 #include <string> //Adds a new datatype similar to and array of chars
@@ -57,6 +69,7 @@ file.
 void drawHangman(int wrongGuesses, int &maxWrongGuesses) {
     static vector<string> fileArr;
     if (!(fileArr.size() > 0)) {
+        //6. File I/O
         Files file;
         file.openFile("character.txt");
         file.readFile(fileArr);
@@ -103,6 +116,7 @@ result is what the goal string,
 knownLetters, gets set equal to.
 -----------------------------------*/
 void generateUnkownWord(string curWord, string &knownLetters, const string blank, const string unknownLetter) {
+    //7. Iteration (loops)
     for (int i = 0; i < (int)curWord.length(); i++) {
         if (curWord[i] != blank[0]) {
             knownLetters += unknownLetter[0];
@@ -129,6 +143,7 @@ void playAgain() {
     string choice;
     string options = "yn";
     bool exit = true;
+    //9. Control
     while (exit) {
         getline(cin, choice);
         if (tolower(choice[0]) == tolower(options[0])) {
@@ -177,9 +192,10 @@ void game() {
     string temp;
 
     //Defines the amount of wrong guesses, the amount of guesses, if the current guess is right, if the user has won, and the maximum amount of wrong guesses.
+    //4. Variables
     int wrongGuesses = 0;
     int guesses = 0;
-    vector<char> rightLetters;
+    vector<char> rightLetters; // 5. Arrays
     vector<char> wrongLetters;
     bool curGuessRight = false;
     bool hasWon = false;
@@ -207,11 +223,13 @@ void game() {
             }
             cout << rightLetters[i];
         }
+        //3. Inputs and Output (I/O)
         cout << endl;
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Known Letters In The Word: " << knownLetters << "\n" << endl;
         cout << "Enter your guess:\n" << endl;
         getline(cin, curGuess);
+        //8. Interaction
         if (curGuess.length() == 1 || curGuess.length() == knownLetters.length()) {
             guesses++;
             curGuessRight = false;
