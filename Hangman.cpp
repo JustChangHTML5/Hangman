@@ -255,12 +255,12 @@ void game() {
     if (hasWon) {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Final Word: " << curWord << "\n" << endl;
-        cout << "Congratulations!\nYou completed the game with " << wrongGuesses << " wrong guesses and " << guesses << " total guesses.\n" << endl;
+        cout << "Congratulations!\nYou completed the game with " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << "correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     } else {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Final Word: " << curWord << "\n" << endl;
-        cout << "You Lost!\nYou lost the game with " << wrongGuesses << " wrong guesses and " << guesses << " total guesses.\n" << endl;
+        cout << "Congratulations!\nYou completed the game with " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << "correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     }
     
