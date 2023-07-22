@@ -140,11 +140,11 @@ void playAgain() {
             break;
         }
         else {
-            cout << "Please type your choice again! (Press Enter To Continue)" << endl;
+            cout << "Please type your choice again! (Press enter to continue)" << endl;
             // Using choice as temporary storage as it will be overwritten later
             getline(cin, choice);
         }
-        cout << "Play Again? [Y/N]" << endl;
+        cout << "Play again? [Y/N]" << endl;
     }
 }
 
@@ -188,7 +188,8 @@ void game() {
     /*The main loop lets the user make multiple guesses until they have made too many wrong ones
     or have guessed the word and finished the game.
     The main loop also displays the known letters and the hangman's current state.
-    The main while loop stops if the user has made too many wrong guesses or has won.*/
+    The main while loop stops if the user has made too many wrong guesses or has won.
+    The user cannot make the same guess twice*/
     while (wrongGuesses < maxWrongGuesses && hasWon == false) {
         system("cls");
         cout << "Wrong Guesses: ";
@@ -215,25 +216,32 @@ void game() {
             guesses++;
             curGuessRight = false;
             if (curGuess.length() == 1) {
-                for (int i = 0; i < (int)curWord.length(); i++) {
-                    if (tolower(curWord[i]) == tolower(curGuess[0])) {
-                        knownLetters[i] = curWord[i];
-                        if (!curGuessRight) {
-                            rightLetters.push_back(curGuess[0]);
+                if (find(rightLetters.begin(), rightLetters.end(), tolower(curGuess[0])) == rightLetters.end() && find(wrongLetters.begin(), wrongLetters.end(), tolower(curGuess[0])) == wrongLetters.end()) {
+                    for (int i = 0; i < (int)curWord.length(); i++) {
+                        if (tolower(curWord[i]) == tolower(curGuess[0])) {
+                            knownLetters[i] = curWord[i];
+                            if (!curGuessRight) {
+                                rightLetters.push_back(tolower(curGuess[0]));
+                            }
+                            curGuessRight = true;
                         }
-                        curGuessRight = true;
                     }
+                }
+                else {
+                    cout << "You cannot guess the same letter twice (Press enter to continue)" << endl;
+                    getline(cin, temp);
+                    continue;
                 }
             } else {
                 if (toLower(curGuess) == toLower(curWord)) {
                     curGuessRight = true;
                 }
             } if (!curGuessRight) {
-                wrongLetters.push_back(curGuess[0]);
+                wrongLetters.push_back(tolower(curGuess[0]));
                 wrongGuesses++;
             }
         } else {
-            cout << "Invalid Guess, Try Again (Press Enter To Continue)" << endl;
+            cout << "Invalid guess, try again (Press enter to continue)" << endl;
             getline(cin, temp);
         } if (knownLetters == curWord) {
             hasWon = true;
@@ -262,6 +270,5 @@ void game() {
 
 int main() {
     game();
-
     return 0;
 }
