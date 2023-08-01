@@ -32,6 +32,15 @@
     <Text Include="menu.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="userData.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="instructions.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="settings.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files.h">

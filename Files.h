@@ -41,6 +41,7 @@ public:
 	//cpp file.
 	void readFile(vector<string>& wordArr);
 	vector<string> returnLines(int lineCount);
+	void writeToFile(bool keep, vector<string> data);
 	
 	//deconstructor method
 	~Files() {
