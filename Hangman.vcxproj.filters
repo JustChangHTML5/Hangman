@@ -41,6 +41,12 @@
     <Text Include="settings.txt">
       <Filter>Resource Files</Filter>
     </Text>
+    <Text Include="text.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
+    <Text Include="phrases.txt">
+      <Filter>Resource Files</Filter>
+    </Text>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="Files.h">

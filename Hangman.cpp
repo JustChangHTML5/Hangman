@@ -47,7 +47,9 @@ tolower(c) function.
 -----------------------------------*/
 string toLower(string s) {
     for (char& c : s) {
-        c = tolower(c);
+        if (isalpha(c)) {
+            c = tolower(c);
+        }
     }
     return s;
 }
@@ -74,7 +76,7 @@ void drawHangman(int wrongGuesses, int &maxWrongGuesses) {
     if (!(fileArr.size() > 0)) {
         //6. File I/O
         Files file;
-        file.openFile("character.txt");
+        file.openFile("character.txt", true);
         file.readFile(fileArr);
         file.closeFile();
     }
@@ -97,9 +99,9 @@ The function first opens a file and
 adds each word it reads inside of the 
 file into the array of words.
 -----------------------------------*/
-void getWords(vector<string> &wordArr) {
+void getWords(vector<string>& wordArr, string filePath) {
     Files file;
-    file.openFile("words.txt");
+    file.openFile(filePath, true);
     file.readFile(wordArr);
     file.closeFile();
 }
@@ -118,14 +120,30 @@ different input constant. The final
 result is what the goal string, 
 knownLetters, gets set equal to.
 -----------------------------------*/
-void generateUnkownWord(string curWord, string &knownLetters, const string blank, const string unknownLetter) {
+void generateUnkownWord(string curWord, string &knownLetters, const string unknownLetter) {
     //7. Iteration (loops)
     for (int i = 0; i < (int)curWord.length(); i++) {
-        if (curWord[i] != blank[0]) {
+        if (isalpha(curWord[i])) {
             knownLetters += unknownLetter[0];
         } else {
-            knownLetters += blank[0];
+            knownLetters += curWord[i];
         }
+    }
+}
+
+int countLetters(string curWord) {
+    int sum = 0;
+    for (char c : curWord) {
+        if (isalpha(c)) {
+            sum++;
+        }
+    }
+    return sum;
+}
+
+void printWord(string word) {
+    for (char c : word) {
+        cout << " " << c;
     }
 }
 
@@ -135,7 +153,7 @@ void menu() {
     bool exit = true;
     int getch();
     Files file;
-    file.openFile("menu.txt");
+    file.openFile("menu.txt", true);
     file.readFile(menuFile);
     file.closeFile();
 
@@ -167,7 +185,6 @@ void menu() {
             case 122: //Keycode for z
                 if (curScreen == 0) {
                     game();
-                    exit = false;
                 } else if (curScreen == 1) {
                     settings();
                 } else {
@@ -186,9 +203,11 @@ void settings() {
     int getch();
     vector<string> settingsFile;
     Files file;
-    file.openFile("settings.txt");
+    file.openFile("settings.txt", true);
     file.readFile(settingsFile);
     file.closeFile();
+    string yes = "Yes";
+    string no = "No";
     while (exit) {
         system("cls");
         cout << "Guess Enters Instantly: " << settingsFile[0];
@@ -211,13 +230,8 @@ void settings() {
             cout << " <--";
         }
         cout << endl;
-        cout << "Quit Instantly Instantly: " << settingsFile[4];
-        if (pointer == 4) {
-            cout << " <--";
-        }
-        cout << endl;
         cout << "Exit?";
-        if (pointer == 5) {
+        if (pointer == 4) {
             cout << " <--";
         }
         cout << endl;
@@ -225,18 +239,27 @@ void settings() {
             case 119: //Keycode for w
                 pointer--;
                 if (pointer < 0) {
-                    pointer = 5;
+                    pointer = 4;
                 }
                 break;
             case 115: //Keycode for s
                 pointer++;
-                if (pointer > 5) {
+                if (pointer > 4) {
                     pointer = 0;
                 }
                 break;
             case 122: //Keycode for z
-                if (pointer < 5) {
-
+                if (pointer < 4) {
+                    if (settingsFile[pointer][0] == yes[0]) {
+                        settingsFile[pointer] = no;
+                    } else {
+                        settingsFile[pointer] = yes;
+                    }
+                } else {
+                    exit = false;
+                    file.openFile("settings.txt", false);
+                    file.writeToFile(settingsFile);
+                    file.closeFile();
                 }
                 break;
             case 120: //Keycode for x
@@ -295,17 +318,43 @@ void game() {
     //Seed the random function based on the time so it generates differently every time you run the program.
     srand((int)time(0));
 
+    //Initialize getch() in case the program needs it.
+    int getch();
+
+    //Reads from the settings file so other parts of the program can do actions based on the settings.
+    vector<string> settings;
+    Files file;
+    file.openFile("settings.txt", true);
+    file.readFile(settings);
+    file.closeFile();
+
+    //Yes and No
+    string yes = "Yes";
+    string no = "No";
+
     //Defines a word array and generates words into the word array from the words file.
     vector<string> wordArr;
-    getWords(wordArr);
+    bool hasStuff = false; // variable that checks whether there is something added to wordArr
+    if (settings[1][0] == yes[0]) {
+        getWords(wordArr, "words.txt");
+        hasStuff = true;
+    }
+    if (settings[2][0] == yes[0]) {
+        getWords(wordArr, "phrases.txt");
+        hasStuff = true;
+    }
 
-    //Initializes the current word and defines the known letters variables and two constants to help display the known letters.
+    //Gives a replacement sentence if they don't want words or phrases.
+    if (!hasStuff) {
+        wordArr.push_back("You can't just make it so there aren't any words or phrases, thats cheating!");
+    }
+
+    //Initializes the current word and defines the known letters variables and a constant to help display the known letters.
     string curWord = wordArr[rand() % wordArr.size()];
     string knownLetters = "";
-    const string blank = " ";
     const string unknownLetter = "_";
     //Generates the known letters.
-    generateUnkownWord(curWord, knownLetters, blank, unknownLetter);
+    generateUnkownWord(curWord, knownLetters, unknownLetter);
 
     //Defines the current guess and a garbage variable.
     string curGuess;
@@ -345,10 +394,21 @@ void game() {
         }
         //3. Inputs and Output (I/O)
         cout << endl;
+        cout << endl;
         drawHangman(wrongGuesses, maxWrongGuesses);
-        cout << "Known Letters In The Word: " << knownLetters << "\n" << endl;
+        cout << endl;
+        cout << "How many letters in Word/Phrase: " << countLetters(curWord) << endl;
+        cout << "Amount of letters remaining in Word/Phrase: " << countLetters(curWord) - countLetters(knownLetters) << endl;
+        cout << endl;
+        cout << "Known Letters In The Word/Phrase:";
+        printWord(knownLetters);
+        cout << endl << endl;
         cout << "Enter your guess:\n" << endl;
-        getline(cin, curGuess);
+        if (settings[0][0] == yes[0]) {
+            curGuess = getch();
+        } else {
+            getline(cin, curGuess);
+        }
         //8. Interaction
         if (curGuess.length() == 1 || curGuess.length() == knownLetters.length()) {
             guesses++;
@@ -372,10 +432,14 @@ void game() {
                 }
             } else {
                 if (toLower(curGuess) == toLower(curWord)) {
+                    knownLetters = curGuess;
                     curGuessRight = true;
                 }
-            } if (!curGuessRight) {
-                wrongLetters.push_back(tolower(curGuess[0]));
+            }
+            if (!curGuessRight) {
+                if (curGuess.length() == 1) {
+                    wrongLetters.push_back(tolower(curGuess[0]));
+                }
                 wrongGuesses++;
             }
         } else {

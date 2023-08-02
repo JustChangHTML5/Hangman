@@ -146,7 +146,9 @@
     <Text Include="character.txt" />
     <Text Include="instructions.txt" />
     <Text Include="menu.txt" />
+    <Text Include="phrases.txt" />
     <Text Include="settings.txt" />
+    <Text Include="text.txt" />
     <Text Include="userData.txt" />
     <Text Include="words.txt" />
   </ItemGroup>

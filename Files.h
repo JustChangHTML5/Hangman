@@ -25,23 +25,30 @@ public:
 	
 	//defines the prototype method openFile which opens a file
 	//using a filepath to the instream variable defined early
-	void openFile(string filepath) {
+	void openFile(string filepath, bool readWrite) {
 		curFilePath = filepath;
-		instream.open(curFilePath);
-		//outstream.open(curFilePath);
+		if (readWrite) {
+			instream.open(curFilePath);
+		} else {
+			outstream.open(curFilePath);
+		}
 	}
 
 	//closes any files in the instream variable
 	void closeFile() {
-		instream.close();
-		//outstream.close();
+		if (instream.is_open()) {
+			instream.close();
+		}
+		if (outstream.is_open()) {
+			outstream.close();
+		}
 	}
 
 	//define array prototypes that will have stuff written into them in the 
 	//cpp file.
 	void readFile(vector<string>& wordArr);
 	vector<string> returnLines(int lineCount);
-	void writeToFile(bool keep, vector<string> data);
+	void writeToFile(vector<string> data);
 	
 	//deconstructor method
 	~Files() {

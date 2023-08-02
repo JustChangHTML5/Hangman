@@ -49,3 +49,12 @@ vector<string> Files::returnLines(int lineCount) {
     }
     return returnArr;
 }
+
+void Files::writeToFile(vector<string> data) {
+    for (int i = 0; i < data.size(); i++) {
+        if (i != 0) {
+            outstream << endl;
+        }
+        outstream << data[i];
+    }
+}
