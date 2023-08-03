@@ -198,6 +198,7 @@ void instructions() {
     vector<string> one = {"1"};
     string temp;
     int intTemp;
+
     system("cls");
     if (dataFile[0][0] == zero[0]) {
         vector<string> instructions;
@@ -270,7 +271,7 @@ void menu() {
 void settings() {
     int pointer = 0;
     bool exit = true;
-    int getch();
+
     vector<string> settingsFile;
     Files file;
     file.openFile("settings.txt", true);
