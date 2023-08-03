@@ -36,6 +36,11 @@ void settings();
 void playAgain();
 void game();
 
+string ctos(char c) {
+    string s(1, c);
+    return s;
+}
+
 /*-----------------------------------
 The toLower(s) function takes in a 
 string as an argument and returns a 
@@ -88,6 +93,42 @@ void drawHangman(int wrongGuesses, int &maxWrongGuesses) {
         int index = offset + i;
         cout << fileArr[index] << endl;
     }
+}
+
+char getArrow() {
+    int ch = _getch();
+    if (ch == 0 || ch == 224) {
+        switch (_getch()) {
+            case 72:
+                return 'w';
+                break;
+            case 80:
+                return 's';
+                break;
+            case 75:
+                return 'a';
+                break;
+            case 77:
+                return 'd';
+                break;
+            case 13:
+                return 'z';
+                break;
+            case 27:
+                return 'x';
+                break;
+        }
+    } else {
+        switch (ch) {
+            case 27:
+                return 'x';
+                break;
+            case 13:
+                return 'z';
+                break;
+        }
+    }
+    return char(ch);
 }
 
 /*-----------------------------------
@@ -147,15 +188,41 @@ void printWord(string word) {
     }
 }
 
+void instructions() {
+    vector<string> dataFile;
+    Files file;
+    file.openFile("hasPlayed.txt", true);
+    file.readFile(dataFile);
+    file.closeFile();
+    string zero = "0";
+    vector<string> one = {"1"};
+    string temp;
+    int intTemp;
+    system("cls");
+    if (dataFile[0][0] == zero[0]) {
+        vector<string> instructions;
+        file.openFile("instructions.txt", true);
+        file.readFile(instructions);
+        file.closeFile();
+        for (int i = 0; i < instructions.size(); i++) {
+            cout << instructions[i] << endl;
+        }
+        intTemp = _getch();
+        file.openFile("hasPlayed.txt", false);
+        file.writeToFile(one);
+        file.closeFile();
+    }
+}
+
 void menu() {
     int curScreen = 0;
     vector<string> menuFile;
     bool exit = true;
-    int getch();
     Files file;
     file.openFile("menu.txt", true);
     file.readFile(menuFile);
     file.closeFile();
+    instructions();
 
     while (exit) {
         system("cls");
@@ -165,33 +232,36 @@ void menu() {
             int index = offset + i;
             cout << menuFile[index] << endl;
         }
-        switch (getch()) {
-            case 119: //Keycode for w
+        switch (getArrow()) {
+            case 'w':
                 break;
-            case 115: //Keycode for s
+            case 's':
                 break;
-            case 97: //Keycode for a
+            case 'a':
                 curScreen--;
                 if (curScreen < 0) {
                     curScreen = 2;
                 }
                 break;
-            case 100: //Keycode for d
+            case 'd':
                 curScreen++;
                 if (curScreen > 2) {
                     curScreen = 0;
                 }
                 break;
-            case 122: //Keycode for z
+            case 'z':
                 if (curScreen == 0) {
                     game();
-                } else if (curScreen == 1) {
+                }
+                else if (curScreen == 1) {
                     settings();
-                } else {
+                }
+                else {
                     exit = false;
                 }
                 break;
-            case 120: //Keycode for x
+            case 'x':
+                exit = false;
                 break;
         }
     }
@@ -225,7 +295,7 @@ void settings() {
             cout << " <--";
         }
         cout << endl;
-        cout << "Hints: " << settingsFile[3];
+        cout << "Hints (? to activate): " << settingsFile[3];
         if (pointer == 3) {
             cout << " <--";
         }
@@ -235,20 +305,29 @@ void settings() {
             cout << " <--";
         }
         cout << endl;
-        switch (getch()) {
-            case 119: //Keycode for w
+        switch (getArrow()) {
+            case 'w':
                 pointer--;
                 if (pointer < 0) {
                     pointer = 4;
                 }
                 break;
-            case 115: //Keycode for s
+            case 's':
                 pointer++;
                 if (pointer > 4) {
                     pointer = 0;
                 }
                 break;
-            case 122: //Keycode for z
+            case 'z':
+                if (pointer == 1) {
+                    if (settingsFile[pointer][0] == yes[0]) {
+                        settingsFile[2] = yes;
+                    }
+                } if (pointer == 2) {
+                    if (settingsFile[pointer][0] == yes[0]) {
+                        settingsFile[1] = yes;
+                    }
+                }
                 if (pointer < 4) {
                     if (settingsFile[pointer][0] == yes[0]) {
                         settingsFile[pointer] = no;
@@ -262,7 +341,7 @@ void settings() {
                     file.closeFile();
                 }
                 break;
-            case 120: //Keycode for x
+            case 'x':
                 exit = false;
                 break;
         }
@@ -317,6 +396,10 @@ the base hangman game.
 void game() {
     //Seed the random function based on the time so it generates differently every time you run the program.
     srand((int)time(0));
+    int intTemp;
+    for (int i = 0; i < 273; i++) {
+        intTemp = rand();//run random function a few times to make it more even
+    }
 
     //Initialize getch() in case the program needs it.
     int getch();
@@ -334,19 +417,11 @@ void game() {
 
     //Defines a word array and generates words into the word array from the words file.
     vector<string> wordArr;
-    bool hasStuff = false; // variable that checks whether there is something added to wordArr
     if (settings[1][0] == yes[0]) {
         getWords(wordArr, "words.txt");
-        hasStuff = true;
     }
     if (settings[2][0] == yes[0]) {
         getWords(wordArr, "phrases.txt");
-        hasStuff = true;
-    }
-
-    //Gives a replacement sentence if they don't want words or phrases.
-    if (!hasStuff) {
-        wordArr.push_back("You can't just make it so there aren't any words or phrases, thats cheating!");
     }
 
     //Initializes the current word and defines the known letters variables and a constant to help display the known letters.
@@ -364,11 +439,12 @@ void game() {
     //4. Variables
     int wrongGuesses = 0;
     int guesses = 0;
-    vector<char> rightLetters; // 5. Arrays
-    vector<char> wrongLetters;
+    vector<string> rightLetters; // 5. Arrays
+    vector<string> wrongLetters;
     bool curGuessRight = false;
     bool hasWon = false;
-    int maxWrongGuesses = 6;
+    int maxWrongGuesses = 9;
+    int hintsUsed = 0;
 
     /*The main loop lets the user make multiple guesses until they have made too many wrong ones
     or have guessed the word and finished the game.
@@ -406,46 +482,67 @@ void game() {
         cout << "Enter your guess:\n" << endl;
         if (settings[0][0] == yes[0]) {
             curGuess = getch();
+            if (curGuess != "?") {
+                if (!('a' <= curGuess[0] && curGuess[0] <= 'z' || 'A' <= curGuess[0] && curGuess[0] <= 'Z')) {
+                    curGuess = "~"; //The user did something they shouldn't have
+                }
+            }
         } else {
             getline(cin, curGuess);
         }
         //8. Interaction
-        if (curGuess.length() == 1 || curGuess.length() == knownLetters.length()) {
-            guesses++;
-            curGuessRight = false;
-            if (curGuess.length() == 1) {
-                if (find(rightLetters.begin(), rightLetters.end(), tolower(curGuess[0])) == rightLetters.end() && find(wrongLetters.begin(), wrongLetters.end(), tolower(curGuess[0])) == wrongLetters.end()) {
-                    for (int i = 0; i < (int)curWord.length(); i++) {
-                        if (tolower(curWord[i]) == tolower(curGuess[0])) {
-                            knownLetters[i] = curWord[i];
-                            if (!curGuessRight) {
-                                rightLetters.push_back(tolower(curGuess[0]));
-                            }
-                            curGuessRight = true;
+        if (curGuess == "?" && settings[3][0] == yes[0]) {
+            for (int i = 0; i < knownLetters.length(); i++) {
+                if (knownLetters[i] == unknownLetter[0]) {
+                    hintsUsed++;
+                    rightLetters.push_back(toLower(ctos(curWord[i])));
+                    for (int j = 0; j < (int)curWord.length(); j++) {
+                        if (tolower(curWord[j]) == tolower(curWord[i])) {
+                            knownLetters[j] = curWord[j];
                         }
+                    }
+                    break;
+                }
+            }
+        } else if (curGuess.length() == 1 && isalpha(curGuess[0]) || curGuess.length() == knownLetters.length()) {
+            if (curGuess.length() == 1 || curGuess.length() == knownLetters.length()) {
+                guesses++;
+                curGuessRight = false;
+                if (curGuess.length() == 1) {
+                    if (find(rightLetters.begin(), rightLetters.end(), toLower(curGuess)) == rightLetters.end() && find(wrongLetters.begin(), wrongLetters.end(), toLower(curGuess)) == wrongLetters.end()) {
+                        for (int i = 0; i < (int)curWord.length(); i++) {
+                            if (tolower(curWord[i]) == tolower(curGuess[0])) {
+                                knownLetters[i] = curWord[i];
+                                if (!curGuessRight) {
+                                    rightLetters.push_back(toLower(curGuess));
+                                }
+                                curGuessRight = true;
+                            }
+                        }
+                    }
+                    else {
+                        cout << "You cannot guess the same letter twice (Press enter to continue)" << endl;
+                        getline(cin, temp);
+                        continue;
                     }
                 }
                 else {
-                    cout << "You cannot guess the same letter twice (Press enter to continue)" << endl;
-                    getline(cin, temp);
-                    continue;
+                    if (toLower(curGuess) == toLower(curWord)) {
+                        knownLetters = curGuess;
+                        curGuessRight = true;
+                        rightLetters.push_back(toLower(curGuess)); // useless because the game ends anyways so nobody will get to see this
+                    }
                 }
-            } else {
-                if (toLower(curGuess) == toLower(curWord)) {
-                    knownLetters = curGuess;
-                    curGuessRight = true;
+                if (!curGuessRight) {
+                    wrongLetters.push_back(toLower(curGuess));
+                    wrongGuesses++;
                 }
-            }
-            if (!curGuessRight) {
-                if (curGuess.length() == 1) {
-                    wrongLetters.push_back(tolower(curGuess[0]));
-                }
-                wrongGuesses++;
             }
         } else {
             cout << "Invalid guess, try again (Press enter to continue)" << endl;
             getline(cin, temp);
-        } if (knownLetters == curWord) {
+        } 
+        if (knownLetters == curWord) {
             hasWon = true;
         }
     }
@@ -457,13 +554,19 @@ void game() {
     if (hasWon) {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Known Letters: " << knownLetters << endl;
-        cout << "Final Word: " << curWord << "\n" << endl;
+        cout << "Final Word: " << curWord << endl;
+        if (settings[3][0] == yes[0]) {
+            cout << "Hints Used: " << hintsUsed << "\n" << endl;
+        }
         cout << "Congratulations! You have completed the game!\n" << "You won with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     } else {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Known Letters: " << knownLetters << endl;
-        cout << "Final Word: " << curWord << "\n" << endl;
+        cout << "Final Word: " << curWord << endl;
+        if (settings[3][0] == yes[0]) {
+            cout << "Hints Used: " << hintsUsed << "\n" << endl;
+        }
         cout << "You lost. Better luck next time!\n" << "You lost with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
         cout << "Play Again? [Y/N]" << endl;
     }

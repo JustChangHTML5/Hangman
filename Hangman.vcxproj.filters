@@ -32,7 +32,7 @@
     <Text Include="menu.txt">
       <Filter>Resource Files</Filter>
     </Text>
-    <Text Include="userData.txt">
+    <Text Include="hasPlayed.txt">
       <Filter>Resource Files</Filter>
     </Text>
     <Text Include="instructions.txt">

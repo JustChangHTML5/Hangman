@@ -1,16 +1,17 @@
 If this is your first time playing hangman, here are some instructions on how to play the game:
 
 At the start of each game, there will be a word or phrase that you have to guess.
-Each turn, you can either guess one letter of the word or guess the entire word.
-If you correctly guess a letter, it will be shown where in the word the letter is.
-If you correctly guess the word, you win the game.
-If you incorrectly guess a letter of word, one limb is added to the hangman.
+Each turn, you can either guess one letter of the word or phrase or guess the entire word or phrase.
+If you correctly guess a letter, it will be shown where in the word or phrase the letter is.
+If you correctly guess the word or phrase, you win the game.
+When guessing the word or phrase, enter everything including punctuation.
+If you incorrectly guess a letter of the word or phrase or the entire word or phrase, one limb is added to the hangman.
 Once the hangman is complete, you lose the game.
-In my game, you only have 9 guesses before the hangman is complete.
+In my game, you only have 9 incorrect guesses you can make before the hangman is complete.
 
 If this is your first time playing this game, here are some controls:
-Movement: w, a, s, d
-Continue / Select: z
-Cancel: x
+Movement: arrow keys or, w, a, s, d
+Continue / Select: Enter or, z
+Cancel: Escape or, x
 
-(z to continue)
+(Press Any Button to Continue)
