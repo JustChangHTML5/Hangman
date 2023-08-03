@@ -446,6 +446,8 @@ void game() {
     int maxWrongGuesses = 9;
     int hintsUsed = 0;
 
+    bool exitedByWill = false; //If true, it beans that they used the equals button to finish the game instead of completing it
+
     /*The main loop lets the user make multiple guesses until they have made too many wrong ones
     or have guessed the word and finished the game.
     The main loop also displays the known letters and the hangman's current state.
@@ -482,7 +484,7 @@ void game() {
         cout << "Enter your guess:\n" << endl;
         if (settings[0][0] == yes[0]) {
             curGuess = getch();
-            if (curGuess != "?") {
+            if (curGuess != "?" && curGuess != "=") {
                 if (!('a' <= curGuess[0] && curGuess[0] <= 'z' || 'A' <= curGuess[0] && curGuess[0] <= 'Z')) {
                     curGuess = "~"; //The user did something they shouldn't have
                 }
@@ -491,6 +493,10 @@ void game() {
             getline(cin, curGuess);
         }
         //8. Interaction
+        if (curGuess == "=") {
+            exitedByWill = true;
+            break;
+        }
         if (curGuess == "?" && settings[3][0] == yes[0]) {
             for (int i = 0; i < knownLetters.length(); i++) {
                 if (knownLetters[i] == unknownLetter[0]) {
@@ -572,7 +578,9 @@ void game() {
     }
     
     //check if user wants to play again
-    playAgain();
+    if (exitedByWill == false) {
+        playAgain();
+    }
 }
 
 int main() {

@@ -1,5 +1,4 @@
-If this is your first time playing hangman, here are some instructions on how to play the game:
-
+How Hangman Works:
 At the start of each game, there will be a word or phrase that you have to guess.
 Each turn, you can either guess one letter of the word or phrase or guess the entire word or phrase.
 If you correctly guess a letter, it will be shown where in the word or phrase the letter is.
@@ -9,9 +8,11 @@ If you incorrectly guess a letter of the word or phrase or the entire word or ph
 Once the hangman is complete, you lose the game.
 In my game, you only have 9 incorrect guesses you can make before the hangman is complete.
 
-If this is your first time playing this game, here are some controls:
+Controls:
 Movement: arrow keys or, w, a, s, d
 Continue / Select: Enter or, z
 Cancel: Escape or, x
-
+You can press the = button to exit a game of hangman at any time.
+You can check the instructions again at any time in the instructions.txt file.
+As long as the setting for it is on, you can press the ? button to reveal a letter from the word.
 (Press Any Button to Continue)
