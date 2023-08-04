@@ -275,6 +275,7 @@ loop.
 void playAgain() {
     string choice;
     string options = "YN";
+    int temp;
     bool exit = true;
     //9. Control
     while (exit) {
@@ -288,9 +289,9 @@ void playAgain() {
             break;
         }
         else {
-            cout << "Please type your choice again! (Press enter to continue)" << endl;
+            cout << "Please type your choice again! (Press any button to continue)" << endl;
             // Using choice as temporary storage as it will be overwritten later
-            getline(cin, choice);
+            temp = _getch();
         }
         cout << "Play again? [Y/N]" << endl;
     }
@@ -338,7 +339,7 @@ void game() {
     //Generates the known letters.
     generateUnkownWord(curWord, knownLetters, unknownLetter);
 
-    //Defines the current guess and a garbage variable.
+    //Defines the current guess and a garbage variables.
     string curGuess;
     string temp;
 
@@ -434,8 +435,8 @@ void game() {
                         }
                     }
                     else {
-                        cout << "You cannot guess the same letter twice (Press enter to continue)" << endl;
-                        getline(cin, temp);
+                        cout << "You cannot guess the same letter twice (Press any button to continue)" << endl;
+                        intTemp = _getch();
                         continue;
                     }
                 }
@@ -452,8 +453,8 @@ void game() {
                 }
             }
         } else {
-            cout << "Invalid guess, try again (Press enter to continue)" << endl;
-            getline(cin, temp);
+            cout << "Invalid guess, try again (Press any button to continue)" << endl;
+            intTemp = _getch();
         } 
         if (knownLetters == curWord) {
             hasWon = true;
