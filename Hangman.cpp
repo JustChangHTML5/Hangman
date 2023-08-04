@@ -27,12 +27,12 @@ M3 Capstone Project Design-Draft a Program: Hangman Game
 #include <time.h> //Gives data on the current time
 #include <cctype> //Library that converts char cases
 #include "Files.h" //Includes file class
+#include "Settings.h" //Includes settings class
 
 using namespace std; 
 
 //Initalize functions
 void menu();
-void settings();
 void playAgain();
 void game();
 
@@ -60,6 +60,22 @@ string toLower(string s) {
 }
 
 /*-----------------------------------
+The function getWords(wordArr) takes
+in an array of words and it
+doesn't return anything.
+
+The function first opens a file and
+adds each word it reads inside of the
+file into the array of words.
+-----------------------------------*/
+void getWords(vector<string>& wordArr, string filePath) {
+    Files file;
+    file.openFile(filePath, true);
+    file.readFile(wordArr);
+    file.closeFile();
+}
+
+/*-----------------------------------
 The drawHangman(wrongGuesses, maxWron
 gGuesses) function takes in the 
 amount of wrong guesses that have 
@@ -80,10 +96,7 @@ void drawHangman(int wrongGuesses, int &maxWrongGuesses) {
     static vector<string> fileArr;
     if (!(fileArr.size() > 0)) {
         //6. File I/O
-        Files file;
-        file.openFile("character.txt", true);
-        file.readFile(fileArr);
-        file.closeFile();
+        getWords(fileArr, "character.txt");
     }
 
     int height = stoi(fileArr[0]);
@@ -132,22 +145,6 @@ char getArrow() {
 }
 
 /*-----------------------------------
-The function getWords(wordArr) takes 
-in an array of words and it 
-doesn't return anything.
-
-The function first opens a file and 
-adds each word it reads inside of the 
-file into the array of words.
------------------------------------*/
-void getWords(vector<string>& wordArr, string filePath) {
-    Files file;
-    file.openFile(filePath, true);
-    file.readFile(wordArr);
-    file.closeFile();
-}
-
-/*-----------------------------------
 The generateUnkownWord(curWord, known
 Letters, blank, unkownLetter) takes 
 in a word string, a goal string, and 
@@ -191,9 +188,7 @@ void printWord(string word) {
 void instructions() {
     vector<string> dataFile;
     Files file;
-    file.openFile("hasPlayed.txt", true);
-    file.readFile(dataFile);
-    file.closeFile();
+    getWords(dataFile, "hasPlayed.txt");
     string zero = "0";
     vector<string> one = {"1"};
     string temp;
@@ -202,9 +197,7 @@ void instructions() {
     system("cls");
     if (dataFile[0][0] == zero[0]) {
         vector<string> instructions;
-        file.openFile("instructions.txt", true);
-        file.readFile(instructions);
-        file.closeFile();
+        getWords(instructions, "instructions.txt");
         for (int i = 0; i < instructions.size(); i++) {
             cout << instructions[i] << endl;
         }
@@ -219,10 +212,7 @@ void menu() {
     int curScreen = 0;
     vector<string> menuFile;
     bool exit = true;
-    Files file;
-    file.openFile("menu.txt", true);
-    file.readFile(menuFile);
-    file.closeFile();
+    getWords(menuFile, "menu.txt");
     instructions();
 
     while (exit) {
@@ -255,91 +245,11 @@ void menu() {
                     game();
                 }
                 else if (curScreen == 1) {
-                    settings();
+                    Settings settings("settings.txt");
+                    settings.setSettings();
                 }
                 else {
                     exit = false;
-                }
-                break;
-            case 'x':
-                exit = false;
-                break;
-        }
-    }
-}
-
-void settings() {
-    int pointer = 0;
-    bool exit = true;
-
-    vector<string> settingsFile;
-    Files file;
-    file.openFile("settings.txt", true);
-    file.readFile(settingsFile);
-    file.closeFile();
-    string yes = "Yes";
-    string no = "No";
-    while (exit) {
-        system("cls");
-        cout << "Guess Enters Instantly: " << settingsFile[0];
-        if (pointer == 0) {
-            cout << " <--";
-        }
-        cout << endl;
-        cout << "Words: " << settingsFile[1];
-        if (pointer == 1) {
-            cout << " <--";
-        }
-        cout << endl;
-        cout << "Phrases: " << settingsFile[2];
-        if (pointer == 2) {
-            cout << " <--";
-        }
-        cout << endl;
-        cout << "Hints (? to activate): " << settingsFile[3];
-        if (pointer == 3) {
-            cout << " <--";
-        }
-        cout << endl;
-        cout << "Exit?";
-        if (pointer == 4) {
-            cout << " <--";
-        }
-        cout << endl;
-        switch (getArrow()) {
-            case 'w':
-                pointer--;
-                if (pointer < 0) {
-                    pointer = 4;
-                }
-                break;
-            case 's':
-                pointer++;
-                if (pointer > 4) {
-                    pointer = 0;
-                }
-                break;
-            case 'z':
-                if (pointer == 1) {
-                    if (settingsFile[pointer][0] == yes[0]) {
-                        settingsFile[2] = yes;
-                    }
-                } if (pointer == 2) {
-                    if (settingsFile[pointer][0] == yes[0]) {
-                        settingsFile[1] = yes;
-                    }
-                }
-                if (pointer < 4) {
-                    if (settingsFile[pointer][0] == yes[0]) {
-                        settingsFile[pointer] = no;
-                    } else {
-                        settingsFile[pointer] = yes;
-                    }
-                } else {
-                    exit = false;
-                    file.openFile("settings.txt", false);
-                    file.writeToFile(settingsFile);
-                    file.closeFile();
                 }
                 break;
             case 'x':
@@ -406,11 +316,7 @@ void game() {
     int getch();
 
     //Reads from the settings file so other parts of the program can do actions based on the settings.
-    vector<string> settings;
-    Files file;
-    file.openFile("settings.txt", true);
-    file.readFile(settings);
-    file.closeFile();
+    Settings settings("settings.txt");
 
     //Yes and No
     string yes = "Yes";
@@ -418,10 +324,10 @@ void game() {
 
     //Defines a word array and generates words into the word array from the words file.
     vector<string> wordArr;
-    if (settings[1][0] == yes[0]) {
+    if (settings.isEnabled(eWords)) {
         getWords(wordArr, "words.txt");
     }
-    if (settings[2][0] == yes[0]) {
+    if (settings.isEnabled(ePhrases)) {
         getWords(wordArr, "phrases.txt");
     }
 
@@ -483,7 +389,7 @@ void game() {
         printWord(knownLetters);
         cout << endl << endl;
         cout << "Enter your guess:\n" << endl;
-        if (settings[0][0] == yes[0]) {
+        if (settings.isEnabled(eEntersInstantly)) {
             curGuess = getch();
             if (curGuess != "?" && curGuess != "=") {
                 if (!('a' <= curGuess[0] && curGuess[0] <= 'z' || 'A' <= curGuess[0] && curGuess[0] <= 'Z')) {
@@ -498,7 +404,7 @@ void game() {
             exitedByWill = true;
             break;
         }
-        if (curGuess == "?" && settings[3][0] == yes[0]) {
+        if (curGuess == "?" && settings.isEnabled(eHints)) {
             for (int i = 0; i < knownLetters.length(); i++) {
                 if (knownLetters[i] == unknownLetter[0]) {
                     hintsUsed++;
@@ -562,7 +468,7 @@ void game() {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Known Letters: " << knownLetters << endl;
         cout << "Final Word: " << curWord << endl;
-        if (settings[3][0] == yes[0]) {
+        if (settings.isEnabled(eHints)) {
             cout << "Hints Used: " << hintsUsed << "\n" << endl;
         }
         cout << "Congratulations! You have completed the game!\n" << "You won with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
@@ -571,7 +477,7 @@ void game() {
         drawHangman(wrongGuesses, maxWrongGuesses);
         cout << "Known Letters: " << knownLetters << endl;
         cout << "Final Word: " << curWord << endl;
-        if (settings[3][0] == yes[0]) {
+        if (settings.isEnabled(eHints)) {
             cout << "Hints Used: " << hintsUsed << "\n" << endl;
         }
         cout << "You lost. Better luck next time!\n" << "You lost with: " << wrongGuesses << " wrong guesses, " << guesses - wrongGuesses << " correct guesses, and " << guesses << " total guesses.\n" << endl;
