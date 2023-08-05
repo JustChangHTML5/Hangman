@@ -149,7 +149,6 @@
     <Text Include="menu.txt" />
     <Text Include="phrases.txt" />
     <Text Include="settings.txt" />
-    <Text Include="text.txt" />
     <Text Include="hasPlayed.txt" />
     <Text Include="words.txt" />
   </ItemGroup>
