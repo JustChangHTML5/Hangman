@@ -8,13 +8,13 @@ M3 Capstone Project Design-Draft a Program: Hangman Game
 
 /*
 * This represents which line in the code contains an example to a requirement.
-3. Inputs and Output (I/O): line 226
-4. Variables: line 195
-5. Arrays: line 198
-6. File I/O: line 72
-7. Iteration (loops): line 119
-8. Interaction: line 232
-9. Control: line: 146
+3. Inputs and Output (I/O): line 433
+4. Variables: line 397
+5. Arrays: line 400
+6. File I/O: line 100
+7. Iteration (loops): line 177
+8. Interaction: line 455
+9. Control: line: 330
 */
 
 #include <iostream> //Adds console input functions
@@ -410,7 +410,9 @@ void game() {
     or have guessed the word and finished the game.
     The main loop also displays the known letters and the hangman's current state.
     The main while loop stops if the user has made too many wrong guesses or has won.
-    The user cannot make the same guess twice*/
+    The user cannot make the same guess twice.
+    If the player has finished the game, run the playAgain() function
+    They can exit if they press =*/
     while (wrongGuesses < maxWrongGuesses && hasWon == false) {
         system("cls");
         cout << "Wrong Guesses: ";
