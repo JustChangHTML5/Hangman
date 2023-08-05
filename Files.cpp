@@ -1,3 +1,11 @@
+/*=========================
+
+Author: Ivan Chang
+Date: 7/6/23
+M3 Capstone Project Design-Draft a Program: Hangman Game
+
+=========================*/
+
 #include "Files.h" //Include header file
 
 /*-----------------------------------
@@ -50,6 +58,17 @@ vector<string> Files::returnLines(int lineCount) {
     return returnArr;
 }
 
+/*-----------------------------------
+The writeToFile(data) method takes in 
+a vector of type string and returns 
+nothing. The class this method is 
+written for is called Files.
+
+This method loops through the vector 
+inputted into the function and writes 
+every line of it to a file that has 
+already been opened.
+-----------------------------------*/
 void Files::writeToFile(vector<string> data) {
     for (int i = 0; i < data.size(); i++) {
         if (i != 0) {

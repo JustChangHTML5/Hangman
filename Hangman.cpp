@@ -36,6 +36,8 @@ void menu();
 void playAgain();
 void game();
 
+//This function takes in a char and returns a string
+//This function is used to convert chars to strings.
 string ctos(char c) {
     string s(1, c);
     return s;
@@ -108,6 +110,19 @@ void drawHangman(int wrongGuesses, int &maxWrongGuesses) {
     }
 }
 
+/*-----------------------------------
+The getArrow() function takes in 
+nothing and returns a char.
+
+This function uses _getch() to get 
+the first character that the user 
+types. if the user types w, s, a, d, 
+z, or x it returns what they typed. 
+If they type escape or enter, it 
+returns x or z. If they type 
+something different, it returns 
+whatever they typed.
+-----------------------------------*/
 char getArrow() {
     int ch = _getch();
     if (ch == 0 || ch == 224) {
@@ -169,6 +184,14 @@ void generateUnkownWord(string curWord, string &knownLetters, const string unkno
     }
 }
 
+/*-----------------------------------
+The countLetters(curWord) function 
+takes in a string and outputs an int.
+
+This function counts the amount of 
+letters in a string and returns the 
+value as an int.
+-----------------------------------*/
 int countLetters(string curWord) {
     int sum = 0;
     for (char c : curWord) {
@@ -179,12 +202,31 @@ int countLetters(string curWord) {
     return sum;
 }
 
+/*-----------------------------------
+The printWord(word) function takes in 
+a string and returns nothing.
+
+This function prints the input string 
+with a space between each character 
+to make it easier to read.
+-----------------------------------*/
 void printWord(string word) {
     for (char c : word) {
         cout << " " << c;
     }
 }
 
+/*-----------------------------------
+The instructions() function takes in 
+nothing and returns nothing.
+
+This function reads from a file to 
+see if it is the first time the user 
+has played and if it is, it displays 
+some instructions from the 
+instructions file, otherwise it does 
+nothing.
+-----------------------------------*/
 void instructions() {
     vector<string> dataFile;
     Files file;
@@ -208,6 +250,14 @@ void instructions() {
     }
 }
 
+/*-----------------------------------
+The menu() function takes in nothing 
+and returns nothing.
+
+This function displays the menu from 
+which the player can play a game, 
+change the settings, or quit.
+-----------------------------------*/
 void menu() {
     int curScreen = 0;
     vector<string> menuFile;
@@ -491,6 +541,8 @@ void game() {
     }
 }
 
+//This is the main function
+//This displays the menu!
 int main() {
     menu();
     //game();
